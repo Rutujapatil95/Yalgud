@@ -48,12 +48,13 @@ const OfferScreen = () => {
         <TouchableOpacity
           style={styles.navButton}
           onPress={() => handleNavigate('QuickPurchase')}>
-          <Text style={styles.navText}>Quick Purchase</Text>
+          <Text style={styles.navText}>Quick </Text>
+          <Text style={styles.navText}> Purchase</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navButton}
           onPress={() => handleNavigate('CartScreen')}>
-          <Text style={styles.navText}>Cart</Text>
+          <Text style={{flex:1, marginTop:"20%", fontWeight: 'bold', fontSize: width * 0.040,color:'#0e034f',}}>Cart</Text>
         </TouchableOpacity>
       </View>
 
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: height * 0.01,
-    paddingHorizontal: width * 0.05,
+    paddingHorizontal: width * 0.04,
   },
   navButton: {
     paddingVertical: height * 0.008,
@@ -200,18 +201,28 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#ccc',
     marginTop: -height * 0.015,
+   backgroundColor:'#eaeded',
   },
   activeButton: {
     backgroundColor: '#2c843e',
   },
   navText: {
-    color: '#000',
-    fontSize: width * 0.035,
+    flex:1,
+    color: '#0e034f',
+    fontSize: width * 0.040,
+    // paddingVertical: height * 0.000001,
+    // paddingHorizontal: width * 0.01,
+    justifyContent:"center",
+    alignItems:"center",
+   fontWeight: 'bold',
+   
   },
   activeText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: width * 0.035,
+    fontSize: width * 0.05,
+    paddingVertical: height * 0.005,
+    paddingHorizontal: width * 0.04,
   },
   groupTitle: {
     fontSize: width * 0.045,

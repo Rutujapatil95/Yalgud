@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -12,18 +12,18 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 // Get device dimensions
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 // Base guideline sizes for scaling (iPhone X sizes)
 const BASE_WIDTH = 375;
 const BASE_HEIGHT = 812;
 
 // Scale helpers
-const scale = (size) => (SCREEN_WIDTH / BASE_WIDTH) * size;
-const verticalScale = (size) => (SCREEN_HEIGHT / BASE_HEIGHT) * size;
+const scale = size => (SCREEN_WIDTH / BASE_WIDTH) * size;
+const verticalScale = size => (SCREEN_HEIGHT / BASE_HEIGHT) * size;
 const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
@@ -31,35 +31,127 @@ const moderateScale = (size, factor = 0.5) =>
 const isLargeScreen = SCREEN_WIDTH >= 768; // tablet or desktop
 
 const initialItems = [
-  { id: '1', name: 'Milk 1L', price: 60, image: require('../Images/milk.jpg') },
-  { id: '2', name: 'Bread', price: 30, image: require('../Images/bread1.jpg') },
-  { id: '3', name: 'Kaju Katli', price: 200, image: require('../Images/kaju.jpg') },
-  { id: '4', name: 'Paneer 200g', price: 90, image: require('../Images/paneer2.png') },
-  { id: '5', name: 'Butter 100g', price: 55, image: require('../Images/butter.png') },
-  { id: '6', name: 'Chocolate Cupcake', price: 90, image: require('../Images/cupcake.jpg') },
+  {id: '1', name: 'Milk 1L', price: 60, image: require('../Images/milk.jpg')},
+  {id: '2', name: 'Bread', price: 30, image: require('../Images/bread1.jpg')},
+  {
+    id: '3',
+    name: 'Kaju Katli',
+    price: 200,
+    image: require('../Images/kaju.jpg'),
+  },
+  {
+    id: '4',
+    name: 'Paneer 200g',
+    price: 90,
+    image: require('../Images/paneer2.png'),
+  },
+  {
+    id: '5',
+    name: 'Butter 100g',
+    price: 55,
+    image: require('../Images/butter.png'),
+  },
+  {
+    id: '6',
+    name: 'Chocolate Cupcake',
+    price: 90,
+    image: require('../Images/cupcake.jpg'),
+  },
 ];
 
 const previousBillsInitial = [
   {
     id: 'bill1',
     items: [
-      { id: '1', name: 'Milk 1L', price: 70, qty: 89, image: require('../Images/milk.jpg') },
-      { id: '2', name: 'Bread', price: 50, qty: 77, image: require('../Images/bread1.jpg') },
-      { id: '3', name: 'Kaju Katli', price: 389, qty: 85, image: require('../Images/kaju.jpg') },
-      { id: '4', name: 'Paneer 200g', price: 90, qty: 55, image: require('../Images/paneer2.png') },
-      { id: '5', name: 'Butter 100g', price: 55, qty: 77, image: require('../Images/butter.png') },
-      { id: '6', name: 'Chocolate Cupcake', price: 72, qty: 93, image: require('../Images/cupcake.jpg') },
+      {
+        id: '1',
+        name: 'Milk 1L',
+        price: 70,
+        qty: 89,
+        image: require('../Images/milk.jpg'),
+      },
+      {
+        id: '2',
+        name: 'Bread',
+        price: 50,
+        qty: 77,
+        image: require('../Images/bread1.jpg'),
+      },
+      {
+        id: '3',
+        name: 'Kaju Katli',
+        price: 389,
+        qty: 85,
+        image: require('../Images/kaju.jpg'),
+      },
+      {
+        id: '4',
+        name: 'Paneer 200g',
+        price: 90,
+        qty: 55,
+        image: require('../Images/paneer2.png'),
+      },
+      {
+        id: '5',
+        name: 'Butter 100g',
+        price: 55,
+        qty: 77,
+        image: require('../Images/butter.png'),
+      },
+      {
+        id: '6',
+        name: 'Chocolate Cupcake',
+        price: 72,
+        qty: 93,
+        image: require('../Images/cupcake.jpg'),
+      },
     ],
   },
   {
     id: 'bill2',
     items: [
-      { id: '1', name: 'Mawa Cake', price: 260, qty: 64, image: require('../Images/mawacake.jpg') },
-      { id: '2', name: 'Shev', price: 130, qty: 78, image: require('../Images/shev.jpg') },
-      { id: '3', name: 'Lassi', price: 200, qty: 88, image: require('../Images/lassi3.jpg') },
-      { id: '4', name: 'Khavyache Modak', price: 490, qty: 52, image: require('../Images/modak.jpg') },
-      { id: '5', name: 'Amrakhand', price: 255, qty: 67, image: require('../Images/khand250gm.png') },
-      { id: '6', name: 'Pastry', price: 89, qty: 92, image: require('../Images/pastry.png') },
+      {
+        id: '1',
+        name: 'Mawa Cake',
+        price: 260,
+        qty: 64,
+        image: require('../Images/mawacake.jpg'),
+      },
+      {
+        id: '2',
+        name: 'Shev',
+        price: 130,
+        qty: 78,
+        image: require('../Images/shev.jpg'),
+      },
+      {
+        id: '3',
+        name: 'Lassi',
+        price: 200,
+        qty: 88,
+        image: require('../Images/lassi3.jpg'),
+      },
+      {
+        id: '4',
+        name: 'Khavyache Modak',
+        price: 490,
+        qty: 52,
+        image: require('../Images/modak.jpg'),
+      },
+      {
+        id: '5',
+        name: 'Amrakhand',
+        price: 255,
+        qty: 67,
+        image: require('../Images/khand250gm.png'),
+      },
+      {
+        id: '6',
+        name: 'Pastry',
+        price: 89,
+        qty: 92,
+        image: require('../Images/pastry.png'),
+      },
     ],
   },
 ];
@@ -72,28 +164,28 @@ const InvoiceListScreen = () => {
   const navigation = useNavigation();
 
   // Increase quantity (for modify or fresh selection)
-  const increaseQty = (id) => {
+  const increaseQty = id => {
     if (selectedItems) {
-      const updated = selectedItems.map((item) =>
-        item.id === id ? { ...item, qty: item.qty + 1 } : item,
+      const updated = selectedItems.map(item =>
+        item.id === id ? {...item, qty: item.qty + 1} : item,
       );
       setSelectedItems(updated);
     } else {
-      setQuantities((prev) => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
+      setQuantities(prev => ({...prev, [id]: (prev[id] || 0) + 1}));
     }
   };
 
   // Decrease quantity
-  const decreaseQty = (id) => {
+  const decreaseQty = id => {
     if (selectedItems) {
       const updated = selectedItems
-        .map((item) =>
-          item.id === id ? { ...item, qty: Math.max(item.qty - 1, 0) } : item,
+        .map(item =>
+          item.id === id ? {...item, qty: Math.max(item.qty - 1, 0)} : item,
         )
-        .filter((item) => item.qty > 0);
+        .filter(item => item.qty > 0);
       setSelectedItems(updated);
     } else {
-      setQuantities((prev) => ({
+      setQuantities(prev => ({
         ...prev,
         [id]: Math.max((prev[id] || 0) - 1, 0),
       }));
@@ -101,18 +193,18 @@ const InvoiceListScreen = () => {
   };
 
   // Delete previous bill confirmation
-  const deletePreviousBill = (billId) => {
+  const deletePreviousBill = billId => {
     Alert.alert(
       'Delete Previous Order',
       'Are you sure you want to delete this entire previous order?',
       [
-        { text: 'Cancel', style: 'cancel' },
+        {text: 'Cancel', style: 'cancel'},
         {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            setPreviousBills((prevBills) =>
-              prevBills.filter((bill) => bill.id !== billId),
+            setPreviousBills(prevBills =>
+              prevBills.filter(bill => bill.id !== billId),
             );
           },
         },
@@ -121,20 +213,20 @@ const InvoiceListScreen = () => {
   };
 
   // Repeat entire bill - merge quantities if items already exist
-  const repeatBill = (itemsToRepeat) => {
+  const repeatBill = itemsToRepeat => {
     if (!selectedItems) {
-      setSelectedItems(itemsToRepeat.map((item) => ({ ...item })));
+      setSelectedItems(itemsToRepeat.map(item => ({...item})));
     } else {
       let updatedItems = [...selectedItems];
 
-      itemsToRepeat.forEach((itemToAdd) => {
+      itemsToRepeat.forEach(itemToAdd => {
         const existingIndex = updatedItems.findIndex(
-          (item) => item.id === itemToAdd.id,
+          item => item.id === itemToAdd.id,
         );
         if (existingIndex >= 0) {
           updatedItems[existingIndex].qty += itemToAdd.qty;
         } else {
-          updatedItems.push({ ...itemToAdd });
+          updatedItems.push({...itemToAdd});
         }
       });
 
@@ -148,24 +240,27 @@ const InvoiceListScreen = () => {
     if (selectedItems && selectedItems.length > 0) {
       finalItems = selectedItems;
     } else {
-      const filtered = initialItems.filter((item) => quantities[item.id] > 0);
-      finalItems = filtered.map((item) => ({
+      const filtered = initialItems.filter(item => quantities[item.id] > 0);
+      finalItems = filtered.map(item => ({
         ...item,
         qty: quantities[item.id],
       }));
     }
 
     if (finalItems.length === 0) {
-      Alert.alert('No items selected', 'Please select at least one item to proceed.');
+      Alert.alert(
+        'No items selected',
+        'Please select at least one item to proceed.',
+      );
       return;
     }
 
     // Navigate to Payment screen with selected items
-    navigation.navigate('PaymentScreen', { items: finalItems });
+    navigation.navigate('PaymentScreen', {items: finalItems});
   };
 
   // Render each item card
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     const qty = selectedItems ? item.qty : quantities[item.id] || 0;
     const total = qty * item.price;
 
@@ -180,11 +275,15 @@ const InvoiceListScreen = () => {
         </Text>
 
         <View style={styles.counter}>
-          <TouchableOpacity onPress={() => decreaseQty(item.id)} style={styles.counterBtn}>
+          <TouchableOpacity
+            onPress={() => decreaseQty(item.id)}
+            style={styles.counterBtn}>
             <Text style={styles.counterText}>−</Text>
           </TouchableOpacity>
           <Text style={styles.qtyText}>{qty}</Text>
-          <TouchableOpacity onPress={() => increaseQty(item.id)} style={styles.counterBtn}>
+          <TouchableOpacity
+            onPress={() => increaseQty(item.id)}
+            style={styles.counterBtn}>
             <Text style={styles.counterText}>+</Text>
           </TouchableOpacity>
         </View>
@@ -193,35 +292,42 @@ const InvoiceListScreen = () => {
   };
 
   // Render previous bill summary card
-  const renderPreviousBill = ({ item }) => {
+  const renderPreviousBill = ({item}) => {
     const total = item.items.reduce((sum, i) => sum + i.price * i.qty, 0);
 
     return (
       <View style={styles.prevCard}>
         <Text style={styles.prevTitle}>🧾 Previous Order</Text>
-        {item.items.slice(0, 6).map((product) => (
+        {item.items.slice(0, 6).map(product => (
           <View key={product.id} style={styles.prevItem}>
-            <Image source={product.image} style={styles.prevImage} resizeMode="cover" />
+            <Image
+              source={product.image}
+              style={styles.prevImage}
+              resizeMode="cover"
+            />
             <Text style={styles.prevText}>
               {product.name} (x{product.qty})
             </Text>
           </View>
         ))}
         {item.items.length > 6 && (
-          <Text style={styles.moreText}>+ {item.items.length - 6} more items</Text>
+          <Text style={styles.moreText}>
+            + {item.items.length - 6} more items
+          </Text>
         )}
         <Text style={styles.prevTotal}>Total: ₹{total}</Text>
 
         <View style={styles.prevButtonsRow}>
-          <TouchableOpacity style={styles.modifyBtn} onPress={() => repeatBill(item.items)}>
+          <TouchableOpacity
+            style={styles.modifyBtn}
+            onPress={() => repeatBill(item.items)}>
             <Text style={styles.modifyText}>🔁 Repeat</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.modifyBtn, styles.deleteBtn]}
-            onPress={() => deletePreviousBill(item.id)}
-          >
-            <Text style={[styles.modifyText, { color: '#fff' }]}>🗑️ Delete</Text>
+            onPress={() => deletePreviousBill(item.id)}>
+            <Text style={[styles.modifyText, {color: '#fff'}]}>🗑️ Delete</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -232,31 +338,34 @@ const InvoiceListScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-      >
+        keyboardShouldPersistTaps="handled">
         <Text style={styles.heading}>🛒 Quick Purchase</Text>
 
         <Text style={styles.sectionTitle}>🧾 Previous Bills</Text>
         {previousBills.length === 0 ? (
-          <Text style={styles.noPreviousBillsText}>No previous bills available.</Text>
+          <Text style={styles.noPreviousBillsText}>
+            No previous bills available.
+          </Text>
         ) : (
           <FlatList
             data={previousBills}
             renderItem={renderPreviousBill}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             contentContainerStyle={styles.verticalList}
             scrollEnabled={false}
           />
         )}
 
-        <Text style={styles.sectionTitle}>{selectedItems ? '🛠️ Modify Items' : '🛍️ All Items'}</Text>
+        <Text style={styles.sectionTitle}>
+          {selectedItems ? '🛠️ Modify Items' : '🛍️ All Items'}
+        </Text>
 
         {/* Responsive layout for items */}
         {isLargeScreen ? (
           <FlatList
             data={selectedItems || initialItems}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             numColumns={3} // 3 per row on large screens
             contentContainerStyle={styles.gridList}
             showsVerticalScrollIndicator={false}
@@ -267,7 +376,7 @@ const InvoiceListScreen = () => {
           <FlatList
             data={selectedItems || initialItems}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={item => item.id}
             horizontal
             contentContainerStyle={styles.horizontalList}
             showsHorizontalScrollIndicator={false}
@@ -336,19 +445,15 @@ const styles = StyleSheet.create({
     margin: scale(8),
     padding: scale(14),
 
-    width: isLargeScreen
-      ? (SCREEN_WIDTH - scale(72)) / 3 // 3 cards with margins
-      : SCREEN_WIDTH * 0.42,
+    width: isLargeScreen ? (SCREEN_WIDTH - scale(72)) / 3 : SCREEN_WIDTH * 0.42,
 
     alignItems: 'center',
 
-    // Shadow for iOS
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.15,
     shadowRadius: 5,
 
-    // Elevation for Android
     elevation: 4,
   },
 
@@ -415,13 +520,11 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(16),
     padding: scale(12),
 
-    // Shadow for iOS
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
 
-    // Elevation for Android
     elevation: 3,
   },
 
@@ -481,7 +584,7 @@ const styles = StyleSheet.create({
   },
 
   deleteBtn: {
-    backgroundColor: '#DC2626',
+    backgroundColor: '#2563EB',
   },
 
   modifyText: {
@@ -498,13 +601,11 @@ const styles = StyleSheet.create({
     borderRadius: scale(12),
     alignItems: 'center',
 
-    // Shadow for iOS
     shadowColor: '#000',
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
 
-    // Elevation for Android
     elevation: 5,
   },
 

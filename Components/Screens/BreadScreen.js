@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Modal,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -18,21 +19,21 @@ const scale = size => (SCREEN_WIDTH / BASE_WIDTH) * size;
 const breadVariants = [
   {
     id: '1',
-    name: 'Regular Banpav',
+    name: 'Regular Bread',
     price: 25,
     mrp: 35,
     image: require('../Images/bredlogo.jpg'),
   },
   {
     id: '2',
-    name: 'Butter Banpav',
+    name: 'Butter  Bread',
     price: 30,
     mrp: 40,
     image: require('../Images/bredlogo.jpg'),
   },
   {
     id: '3',
-    name: 'Mini Banpav',
+    name: 'Mini  Bread',
     price: 20,
     mrp: 28,
     image: require('../Images/bredlogo.jpg'),
@@ -49,6 +50,10 @@ const BreadScreen = () => {
     }, {})
   );
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [popupQuantity, setPopupQuantity] = useState(0);
+
   const increment = id => {
     setQuantities(prev => ({ ...prev, [id]: prev[id] + 1 }));
   };
@@ -60,22 +65,52 @@ const BreadScreen = () => {
     }));
   };
 
-  const handleAddToCart = variant => {
-    const qty = quantities[variant.id];
+  const openPopup = variant => {
+    setSelectedVariant(variant);
+    setPopupQuantity(quantities[variant.id]); // Set current quantity
+    setModalVisible(true);
+  };
+
+  const closePopup = () => {
+    setModalVisible(false);
+    setSelectedVariant(null);
+  };
+
+  const confirmPopupQuantity = () => {
+    if (selectedVariant) {
+      setQuantities(prev => ({
+        ...prev,
+        [selectedVariant.id]: popupQuantity,
+      }));
+    }
+    closePopup();
+  };
+
+  const handleCartPress = () => {
+    const selectedItems = breadVariants.map(variant => {
+      const qty = quantities[variant.id];
+      return {
+        ...variant,
+        quantity: qty,
+        total: qty * variant.price,
+      };
+    });
+
+    const totalAmount = selectedItems.reduce(
+      (acc, item) => acc + item.total,
+      0
+    );
+
     navigation.navigate('PaymentScreen', {
-      item: variant,
-      quantity: qty,
-      total: variant.price * qty,
+      cartItems: selectedItems,
+      totalAmount,
     });
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: scale(30) }}
-      >
-        <Text style={styles.name}>Banpav / बनपाव</Text>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: scale(100) }}>
+        <Text style={styles.name}> Bread / ब्रेड</Text>
         <Text style={styles.sectionTitle}>Select Type</Text>
 
         {breadVariants.map(variant => {
@@ -85,17 +120,15 @@ const BreadScreen = () => {
           const totalProfit = totalMRP - totalPrice;
 
           return (
-            <View key={variant.id} style={styles.variantCard}>
+            <TouchableOpacity
+              key={variant.id}
+              style={styles.variantCard}
+              onPress={() => openPopup(variant)}
+            >
               <Image source={variant.image} style={styles.variantImage} />
-
               <View style={styles.textContainer}>
-                {/* Single row with name, profit, price, mrp */}
                 <View style={styles.row}>
-                  <Text
-                    style={styles.variantName}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
+                  <Text style={styles.variantName} numberOfLines={1} ellipsizeMode="tail">
                     {variant.name}
                   </Text>
 
@@ -107,36 +140,70 @@ const BreadScreen = () => {
                   <Text style={styles.mrp}>₹{totalMRP}</Text>
                 </View>
 
-                {/* Quantity counter and Add to Cart */}
                 <View style={styles.bottomRow}>
                   <View style={styles.counterWrapper}>
-                    <TouchableOpacity
-                      onPress={() => decrement(variant.id)}
-                      style={styles.counterButton}
-                    >
+                    <TouchableOpacity onPress={() => decrement(variant.id)} style={styles.counterButton}>
                       <Text style={styles.counterText}>−</Text>
                     </TouchableOpacity>
                     <Text style={styles.quantity}>{qty}</Text>
-                    <TouchableOpacity
-                      onPress={() => increment(variant.id)}
-                      style={styles.counterButton}
-                    >
+                    <TouchableOpacity onPress={() => increment(variant.id)} style={styles.counterButton}>
                       <Text style={styles.counterText}>+</Text>
                     </TouchableOpacity>
                   </View>
-
-                  <TouchableOpacity
-                    style={styles.cartButton}
-                    onPress={() => handleAddToCart(variant)}
-                  >
-                    <Text style={styles.cartButtonText}>Add to Cart</Text>
-                  </TouchableOpacity>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
           );
         })}
       </ScrollView>
+
+      {/* Modal for Item Details */}
+      <Modal transparent={true} visible={modalVisible} animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {selectedVariant && (
+              <>
+                <Image source={selectedVariant.image} style={styles.modalImage} />
+                <Text style={styles.modalName}>{selectedVariant.name}</Text>
+                <Text style={styles.modalPrice}>Price: ₹{selectedVariant.price}</Text>
+                <Text style={styles.modalMrp}>MRP: ₹{selectedVariant.mrp}</Text>
+
+                <View style={styles.counterWrapper}>
+                  <TouchableOpacity
+                    onPress={() => setPopupQuantity(qty => (qty > 0 ? qty - 1 : 0))}
+                    style={styles.counterButton}
+                  >
+                    <Text style={styles.counterText}>−</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{popupQuantity}</Text>
+                  <TouchableOpacity
+                    onPress={() => setPopupQuantity(qty => qty + 1)}
+                    style={styles.counterButton}
+                  >
+                    <Text style={styles.counterText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <Text style={styles.modalTotal}>Total: ₹{selectedVariant.price * popupQuantity}</Text>
+
+                <TouchableOpacity style={styles.addButton} onPress={confirmPopupQuantity}>
+                  <Text style={styles.addButtonText}>Add to List</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.closeButton} onPress={closePopup}>
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
+
+      <View style={styles.bottomCartContainer}>
+        <TouchableOpacity style={styles.cartButton} onPress={handleCartPress}>
+          <Text style={styles.cartButtonText}>Add All to Cart</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -166,12 +233,13 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(20),
     marginTop: scale(14),
     borderRadius: scale(12),
-    padding: scale(10),
+    padding: scale(20),
     alignItems: 'center',
     elevation: 2,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    
   },
   variantImage: {
     width: scale(60),
@@ -186,7 +254,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     flexWrap: 'wrap',
   },
   variantName: {
@@ -221,8 +288,6 @@ const styles = StyleSheet.create({
   },
   bottomRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
     marginTop: scale(10),
   },
   counterWrapper: {
@@ -232,6 +297,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(8),
     paddingHorizontal: scale(6),
     paddingVertical: scale(2),
+    marginLeft: scale(146),
   },
   counterButton: {
     paddingHorizontal: scale(8),
@@ -245,17 +311,85 @@ const styles = StyleSheet.create({
     fontSize: scale(15),
     marginHorizontal: scale(4),
   },
-  cartButton: {
+  bottomCartContainer: {
+    position: 'absolute',
+    bottom: scale(10),
+    left: scale(20),
+    right: scale(20),
     backgroundColor: '#2563EB',
-    borderRadius: scale(8),
-    paddingHorizontal: scale(14),
-    paddingVertical: scale(8),
-    marginLeft: scale(60),
+    borderRadius: scale(12),
+  },
+  cartButton: {
+    paddingVertical: scale(14),
+    alignItems: 'center',
   },
   cartButtonText: {
     color: '#fff',
     fontWeight: '600',
-    fontSize: scale(13),
+    fontSize: scale(16),
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: scale(280),
+    backgroundColor: '#fff',
+    padding: scale(20),
+    borderRadius: scale(12),
+    alignItems: 'center',
+  },
+  modalImage: {
+    width: scale(100),
+    height: scale(100),
+    marginBottom: scale(10),
+    borderRadius: scale(8),
+  },
+  modalName: {
+    fontSize: scale(18),
+    fontWeight: 'bold',
+    marginBottom: scale(8),
+  },
+  modalPrice: {
+    fontSize: scale(14),
+    color: '#221180',
+    fontWeight: '700',
+  },
+  modalMrp: {
+    fontSize: scale(14),
+    textDecorationLine: 'line-through',
+    color: '#221180 ',
+    marginBottom: scale(10),
+  },
+  modalTotal: {
+    fontSize: scale(16),
+    fontWeight: '600',
+    marginVertical: scale(10),
+  },
+  addButton: {
+    marginTop: scale(6),
+    backgroundColor: '#10B981',
+    paddingHorizontal: scale(20),
+    paddingVertical: scale(10),
+    borderRadius: scale(8),
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: scale(14),
+  },
+  closeButton: {
+    marginTop: scale(10),
+    backgroundColor: '#EF4444',
+    paddingHorizontal: scale(20),
+    paddingVertical: scale(8),
+    borderRadius: scale(8),
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontWeight: '600',
   },
 });
 
